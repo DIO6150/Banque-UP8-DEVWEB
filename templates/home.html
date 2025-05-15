@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Accueil Banque{% endblock %}
+
+{% block postcontent %}
+<div class="sidebar">
+    <h2>Menu</h2>
+    <nav>
+        <ul>
+            <li><a href="/transaction">💸 Transactions</a></li>
+            <li><a href="/history">📜 Historique</a></li>
+            <li><a href="/loan_request">🏦 Demande de prêt</a></li>
+            <li><a href="/user_settings">⚙️ Paramètres</a></li>
+            {% if session.get('role') == 'admin' %}
+            <li><a href="/admin/dashboard">🛠️ Admin Dashboard</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="info-box">
+    <div class="widget">
+        <h1>Bienvenue {{ username }}</h1>
+    </div>
+
+    <div class="widget">
+        <h3>Statistiques</h2>
+
+        <ul class="stats">
+            <li>Solde : {{ balance }} €</li>
+            <li>État du compte : {{ 'Gelé' if frozen else 'Actif' }}</li>
+        </ul>
+    </div>
+</div>
+
+
+<!--
+    <form>
+        <h2>Bienvenue !</h2>
+        <p><strong>Solde :</strong> {{ balance }} €</p>
+    <p><strong>État du compte :</strong> {{ 'Gelé' if frozen else 'Actif' }}</p>
+    
+    <div style="margin-top: 2rem;">
+        <a href="/transactions" class="btn">Voir l'historique</a><br><br>
+        <a href="/transact" class="btn">Faire une transaction</a><br><br>
+        {% if session.get('role') == 'admin' %}
+        <a href="/admin/dashboard" class="btn" >📊 Dashboard Administrateur</a><br><br>
+        {% endif %}
+        <form method="post" action="/toggle_freeze">
+            <button class="btn" style="margin-top:1rem; background-color: #dc3545;">
+                {% if frozen %}Dégeler le compte{% else %}Geler le compte{% endif %}
+            </button>
+        </form><br><br>
+        <a href="/logout" class="btn">Se déconnecter</a>
+    </div>
+</form>
+-->
+{% endblock %}

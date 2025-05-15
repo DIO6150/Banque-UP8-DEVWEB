@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+<div class="info-box">
+    <form method="post" action="/transaction" class="widget">
+        <h2>Faire une transaction</h2>
+        
+        <div class="row">
+            <label>Type de transaction : </label>
+            <select name="type" required>
+                <option value="deposit">Dépôt</option>
+                <option value="withdrawal">Retrait</option>
+            </select>
+        </div>
+            
+        <input type="number" name="amount" placeholder="Montant (€)" step="0.01" min="0" required>
+    
+        <button type="submit" class="btn">Valider</button>
+    </form>
+</div>
+
+<a href="/home" class="btn">⬅ Retour</a>
+{% endblock %}

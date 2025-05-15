@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Historique des Transactions{% endblock %}
+{% block content %}
+<h2>Historique de vos transactions</h2>
+
+{% if transactions %}
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Montant (€)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t['date'] }}</td>
+            <td class="type {{ t['type'] }}">{{ t['type'].capitalize() }}</td>
+            <td>{{ '%.2f' | format(t['amount']) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune transaction enregistrée.</p>
+{% endif %}
+
+<a href="/home" class="btn">⬅ Retour accueil</a>
+{% endblock %}

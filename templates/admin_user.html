@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Modifier Utilisateur{% endblock %}
+{% block content %}
+<h2>Modifier Utilisateur</h2>
+
+<form method="post">
+    <label>Email :</label>
+    <input type="text" value="{{ user.email }}" readonly>
+
+    <label>Rôle :</label>
+    <select name="role">
+        <option value="regular" {% if user.role == 'regular' %}selected{% endif %}>Utilisateur</option>
+        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+    </select>
+
+    <label>Solde (€) :</label>
+    <input type="number" name="balance" value="{{ user.balance }}" step="0.01" required>
+
+    <label>Gelé :</label>
+    <input type="checkbox" name="frozen" {% if user.frozen %}checked{% endif %}>
+
+    <button type="submit" class="btn">Sauvegarder</button>
+</form>
+
+<a href="/admin/dashboard" class="btn">⬅ Retour au dashboard</a>
+{% endblock %}
