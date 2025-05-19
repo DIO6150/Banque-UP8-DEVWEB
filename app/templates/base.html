@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Banque{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+
+<body>
+    <div class="page-wrapper">
+        
+        <header>
+            <div class="header-container">
+                <h1>🏦 Ma Banque</h1>
+                <nav>
+                    {% if session.get('user_id') %}
+                    <a href="/home">Accueil</a>
+                    <a href="/logout">Déconnexion</a>
+                    {% else %}
+                    <a href="/login">Connexion</a>
+                    <a href="/signup">Inscription</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+        
+        <div class="layout-container">
+            {% block precontent %}{% endblock %}
+            <main>    
+                {% block content %}{% endblock %}
+            </main>
+            {% block postcontent %}{% endblock %}
+        </div>
+        
+        
+        <footer>
+            <p>&copy; 2025 Ma Banque — Tous droits réservés.</p>
+        </footer>
+    </div>
+</body>
+</html>
+
+{% block scripts %}{% endblock %}

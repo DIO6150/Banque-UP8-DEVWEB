@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+{% block content %}
+<div class="info-box">
+    <form method="post" action="/login" class="widget">
+        <h2>Connexion</h2>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <button type="submit" class="btn">Se connecter</button>
+        <a href="/signup" class="link">Pas encore de compte ? Inscription</a>
+    </form>
+</div>
+{% endblock %}

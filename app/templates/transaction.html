@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Transactions{% endblock %}
+
+{% block scripts %}
+<script>
+const select = document.getElementById ('type');
+const container = document.getElementById('extra-field-container');
+console.log (select)
+
+function updateTransferField () {
+    // On vide le container à chaque changement
+    container.innerHTML = '';
+
+    if (select.value === 'transfer') {
+        // Créer un champ pour entrer l'ID de l'utilisateur
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        const savedId = localStorage.getItem('user-id-trans');
+
+        label.setAttribute('for', 'user-id-trans');
+        label.textContent = 'ID de l’utilisateur :';
+
+        input.type = 'text';
+        input.id = 'user-id-trans';
+        input.name = 'user-id-trans';
+        input.required = true;
+        input.type = 'text';
+        input.pattern = '\\d+';
+        input.inputMode = 'numeric';
+        input.min = '0';
+        input.strep = '1';
+        input.title = 'Numéro de compte du bénéficiaire';
+        input.placeholder = 'Ex: 0000000000'
+
+        if (savedId) {
+            input.value = savedId;
+        }
+
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/\D/g, '');
+            localStorage.setItem('user-id-trans', input.value);
+        });
+
+        container.appendChild(label);
+        container.appendChild(input);
+    }
+}
+
+select.addEventListener('change', updateTransferField);
+window.addEventListener('DOMContentLoaded', updateTransferField);
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="info-box">
+    <div class="column-center">
+        <div class="widget">
+            <h2>Faire une transaction</h2>
+        </div>
+
+        <div class="widget">
+            <form method="post" action="/transaction">
+                <div class="row-center">
+                    <label>Type de transaction : </label>
+                    <select name="type" id="type" required>
+                        <option value="deposit">Dépôt</option>
+                        <option value="transfer">Verser à</option>
+                    </select>
+                </div>
+                <div class="row-center" id="extra-field-container"></div>
+                    
+                <input type="number" name="amount" placeholder="Montant (€)" step="0.01" min="0" required>
+            
+                <button type="submit" class="btn">Valider</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

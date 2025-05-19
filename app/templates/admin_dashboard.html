@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Admin{% endblock %}
+{% block content %}
+
+
+<div class="info-box">
+    <div class="column-center">
+        <div class="widget">
+            <h2>Dashboard Administrateur</h2>
+        </div>
+
+        <div class="row">
+            <div class="widget">
+                <h3>Utilisateurs</h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Solde (€)</th>
+                            <th>Gelé</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u.firstname }}</td>
+                            <td>{{ u.name }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.role }}</td>
+                            <td>{{ '%.2f'|format(u.balance) }}</td>
+                            <td>{{ 'Oui' if u.frozen else 'Non' }}</td>
+                            <td>
+                                <a class="btn" href="/admin/user/{{ u.id }}">Modifier</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget">
+                <h3>Statistiques</h3>
+                <ul class="stats">
+                    <li>Total utilisateurs : {{ stats.total_users }}</li>
+                    <li>Admins : {{ stats.admins }}</li>
+                    <li>Comptes gelés : {{ stats.frozen_accounts }}</li>
+                    <li>Solde total : {{ stats.total_balance }} €</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

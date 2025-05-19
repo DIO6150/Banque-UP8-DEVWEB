@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Inscription{% endblock %}
+{% block content %}
+<div class="info-box">
+    <form method="post" action="/signup" class="widget">
+        <h2>Inscription</h2>
+        <input type="email" name="email" placeholder="Email" required>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="text" name="firstname" placeholder="Prénom" required>
+        <input type="text" name="name" placeholder="Nom" required>
+        <button type="submit" class="btn">Créer un compte</button>
+        <a href="/login" class="link">Déjà un compte ? Connexion</a>
+    </form>
+</div>
+{% endblock %}
