@@ -232,7 +232,7 @@ input::file-selector-button {
     text-align: center;
     display: inline-block;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 
@@ -511,4 +511,22 @@ input[type=text]:read-only {
 }
 .flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
     right: 0;
+}
+
+
+/* LOAN STATUS */
+
+.type.waiting {
+    color:orange;
+    font-weight: bold;
+}
+
+.type.approved {
+    color: #11e643;
+    font-weight: bold;
+}
+
+.type.rejected {
+    color: #d11414;
+    font-weight: bold;
 }

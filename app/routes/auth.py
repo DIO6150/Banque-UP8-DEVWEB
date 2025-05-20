@@ -42,6 +42,7 @@ def signup():
         db.commit()
         db.execute('INSERT INTO accounts (user_id) SELECT id FROM users WHERE email = ?', (email,))
         db.commit()
+        flash ("Inscription complète.", "success")
         return redirect(url_for('auth.login'))
     except sqlite3.IntegrityError:
         flash("Email déjà utilisée.", "error")

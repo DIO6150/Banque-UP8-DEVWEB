@@ -11,12 +11,12 @@
             <div class="widget">
                 <form method="post" class="column-center">
                     <div class="form-liner">
-                        <label>Nom</label>
+                        <label>Prénom</label>
                         <input type="text" value="{{ user.firstname }}" readonly>
                     </div>
 
                     <div class="form-liner">
-                        <label>Nom de famille</label>
+                        <label>Nom</label>
                         <input type="text" value="{{ user.name }}" readonly>
                     </div>
 
@@ -34,7 +34,7 @@
 
                     <div class="form-liner">
                         <label>Solde (€)</label>
-                        <input type="number" name="balance" value="{{ user.balance }}" step="0.01" required>
+                        <input type="number" name="balance" value="{{ user.balance }}" step="0.01" class="number-textbox" required>
                     </div>
 
                     <div class="form-liner">
@@ -108,7 +108,14 @@
                     <td>{{ loan.amount }} €</td>
                     <td>{{ loan.duration_months }} mois</td>
                     <td>{{ loan.reason }}</td>
-                    <td>{{ loan.status }}</td>
+                    <td class="type {{loan.status}}">{% if loan.status == 'waiting' %}
+                        En attente
+                        {% elif loan.status == 'approved' %}
+                        Validée
+                        {% else %}
+                        Refusée
+                        {% endif %}
+                    </td>
                     <td>
                         {% if loan.file_path %}
                         <a href="{{ url_for('uploaded_file', filename=loan.file_path) }}" target="_blank">Voir</a>
@@ -117,7 +124,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if loan.status == 'En attente' %}
+                        {% if loan.status == 'waiting' %}
                         <form method="POST" action="{{ url_for('admin.update_loan_status') }}">
                             <input type="hidden" name="loan_id" value="{{ loan.id }}">
                             <button name="action" value="approve" class="success-btn">Valider</button>

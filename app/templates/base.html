@@ -9,7 +9,6 @@
 
 <body>
     <div class="page-wrapper">
-        
         <header>
             <div class="header-container">
                 <h1>🏦 Ma Banque</h1>
@@ -25,6 +24,16 @@
             </div>
         </header>
         
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
         <div class="layout-container">
             {% block precontent %}{% endblock %}
             <main>
@@ -44,3 +53,25 @@
 </html>
 
 {% block scripts %}{% endblock %}
+
+<script>
+    number_textboxes = document.getElementsByClassName ("number-textbox");
+    for (element of number_textboxes)
+    {
+        element.addEventListener('beforeinput', (e) => {
+            const char = e.data;
+            const value = element.value;
+
+            if (e.inputType !== "insertText") return;
+            console.log (value)
+
+            if (/^\d$/.test(char)) return;
+
+            if ((char === '.' || char === ',') && (!value.includes('.') || !value.includes(','))){
+                return;
+            }
+
+            e.preventDefault();
+        });    
+    }
+</script>

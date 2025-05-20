@@ -6,15 +6,6 @@
     <div class="single-liner">
         <input type="email" name="email" placeholder="Email" required>
     </div>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class="flash-messages">
-            {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-    {% endwith %}
     <div class="single-liner">
         <input type="password" name="password" placeholder="Mot de passe" required>
     </div>

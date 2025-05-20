@@ -35,7 +35,7 @@ CREATE TABLE loan_requests (
     duration_months INTEGER,
     reason TEXT,
     file_path TEXT,
-    status TEXT DEFAULT 'En attente',
+    status TEXT DEFAULT 'waiting' CHECK(status IN ('waiting', 'rejected', 'approved')) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );

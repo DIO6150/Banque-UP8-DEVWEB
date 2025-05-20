@@ -27,6 +27,10 @@ def home():
     db = get_db()
     
     account = db.execute('''SELECT balance, frozen FROM accounts WHERE user_id = ?''', (session['user_id'],)).fetchone ()
+    if (not account):
+        return redirect (url_for ("auth.login"))
+
+
     username = db.execute('''SELECT firstname || ' ' || name AS fullname FROM users WHERE id = ?''', (session['user_id'], )).fetchone ()["fullname"]
     role = session.get('role', 'client')
 

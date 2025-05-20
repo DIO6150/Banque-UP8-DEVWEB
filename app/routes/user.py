@@ -37,11 +37,15 @@ def transaction():
         transfer_to = None
         reason = request.form['reason']
 
-        if (len(reason) > 80): return ("raison trop longue", 400)
+        if (len(reason) > 80):
+            flash ("Motif trop long", "error")
+            return (redirect (request.referrer))
 
         # Vérifie si compte gelé
         frozen = db.execute('SELECT frozen FROM accounts WHERE user_id = ?', (user_id,)).fetchone()['frozen']
-        if frozen: return "Compte gelé, opération impossible.", 403
+        if frozen:
+            flash ("Compte gelé, opétation impossible")
+            return (redirect (request.referrer))
 
         # Logique par type
         if type_ == 'deposit':
@@ -53,7 +57,8 @@ def transaction():
                 transfer_to = int(request.form ['user-id-trans'])
 
                 if (transfer_to == user_id):
-                    return ("Bénéficiaire et émetteur sont identiques", 400)
+                    flash ("Bénéficiaire et émetteur sont identiques", "error")
+                    return (redirect (request.referrer))
 
                 cursor = db.execute('SELECT user_id FROM accounts WHERE user_id = ?', (transfer_to, ))
 
@@ -64,13 +69,17 @@ def transaction():
                     db.execute('INSERT INTO transactions (user_id, type, amount, date, reason) VALUES (?, ?, ?, ?, ?)', (user_id, type_, -amount, now, reason))
 
                 else:
-                    return ("ID bénéficiaire inconnu", 400)
+                    flash ("ID bénéficiaire inconnu.", "error")
+                    return (redirect (request.referrer))
 
             else:
-                return ("Bénéficiaire non précisé", 400)
+                
+                flash ("Bénéficiaire non précisé.", "error")
+                return (redirect (request.referrer))
 
         else:
-            return "Type de transaction inval   ide", 400
+            flash ("Type de transaction invalide.", "error")
+            return (redirect (request.referrer))
 
         db.commit()
         return redirect(url_for('home.home'))
@@ -87,11 +96,21 @@ def loan_request():
     cursor = db.cursor()
 
     if request.method == "POST":
-        amount = request.form["amount"]
-        duration = request.form["duration"]
+        amount = float(request.form["amount"])
+        duration = int(request.form["duration"])
         reason = request.form["reason"]
 
-        if (len(reason) > 80): return ("raison trop longue", 400)
+        if (len(reason) > 80): 
+            flash ("Motif trop long.", "error.")
+            return (redirect (request.referrer))
+        
+        if (amount <= 0): 
+            flash ("Montant demandé est invalide.", "error")
+            return (redirect (request.referrer))
+        
+        if (duration <= 0):
+            flash ("Durée demandée est invalide.", "error")
+            return (redirect (request.referrer))
 
         document = request.files.get("justification")
         file_path = None
@@ -104,7 +123,7 @@ def loan_request():
             file_path = filename
 
         elif document and document.filename:
-            flash("Format de fichier non autorisé (PDF uniquement)")
+            flash("Format de fichier non autorisé (PDF uniquement)", "error")
             return redirect(url_for('user.loan_request'))
 
         cursor.execute("""
@@ -112,7 +131,7 @@ def loan_request():
             VALUES (?, ?, ?, ?, ?)
         """, (user_id, amount, duration, reason, file_path))
         db.commit()
-        flash("Votre demande de prêt a bien été soumise.")
+        flash("Votre demande de prêt a bien été soumise.", "success")
         return redirect(url_for("user.loan_request"))
 
     # Affiche toutes les demandes de l'utilisateur
@@ -138,13 +157,13 @@ def cancel_loan_request():
     db = get_db()
     # Vérifie que le prêt appartient bien à l'utilisateur
     loan = db.execute("SELECT * FROM loan_requests WHERE id = ? AND user_id = ?", (loan_id, user_id)).fetchone()
-    if not loan or loan["status"] != "En attente":
-        flash("Impossible d'annuler cette demande.")
+    if not loan or loan["status"] != "waiting":
+        flash("Impossible d'annuler cette demande.", "error")
         return redirect(url_for("user.loan_request"))
 
     db.execute("DELETE FROM loan_requests WHERE id = ?", (loan_id,))
     db.commit()
-    flash("Votre demande a été annulée.")
+    flash("Votre demande a été annulée.", "success")
     return redirect(url_for("user.loan_request"))
 
 
@@ -168,8 +187,8 @@ def user_settings():
 
         if new_password:
             if not check_password_hash (user ["password"], old_password):
-                flash ("Mot de passe incorect")
-                return url_for (request.referrer)
+                flash ("Mot de passe incorect", "error")
+                return redirect (request.referrer)
 
             hashed_pw = generate_password_hash(new_password)
             db.execute(

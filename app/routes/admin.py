@@ -37,7 +37,7 @@ def admin_dashboard():
 @admin_bp.route('/admin/user/<int:user_id>', methods=['GET', 'POST'])
 def admin_edit_user(user_id):
     if session.get('role') != 'admin':
-        return "Accès interdit", 403
+        return ("Accès interdit", 403)
     db = get_db()
 
     if request.method == 'POST':
@@ -95,11 +95,22 @@ def update_loan_status():
         flash("Action non reconnue", "error")
         return redirect (request.referrer) or redirect(url_for("admin.admin_dashboard"))
 
-    new_status = "Validée" if action == "approve" else "Refusée"
+    new_status = "approved" if action == "approve" else "rejected"
 
     db = get_db()
-    db.execute("UPDATE loan_requests SET status = ? WHERE id = ?", (new_status, loan_id))
-    db.commit()
 
-    flash(f"Demande #{loan_id} {new_status.lower()}.")
+    loan = db.execute ("SELECT status FROM loan_requests WHERE id = ?", (loan_id, )).fetchone ()
+
+    if (loan):
+        if loan["status"] == "waiting":
+            db.execute("UPDATE loan_requests SET status = ? WHERE id = ?", (new_status, loan_id))
+            db.commit()
+            status_text = "approuvée" if (new_status == "approved") else "rejetée"
+            flash(f"Demande #{loan_id} {status_text}.", "success")
+        else:
+            flash(f"Demande de prêt #{loan_id} à déjà été traitée.", "success")
+
+    else:
+        flash(f"Demande de prêt #{loan_id} n'existe pas.")
+
     return redirect (request.referrer) or redirect(url_for("admin.admin_dashboard"))
