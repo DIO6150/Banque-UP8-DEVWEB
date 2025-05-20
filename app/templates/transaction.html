@@ -18,7 +18,7 @@ function updateTransferField () {
         const savedId = localStorage.getItem('user-id-trans');
 
         label.setAttribute('for', 'user-id-trans');
-        label.textContent = 'ID de l’utilisateur :';
+        label.textContent = 'ID de l’utilisateur';
 
         input.type = 'text';
         input.id = 'user-id-trans';
@@ -52,28 +52,36 @@ window.addEventListener('DOMContentLoaded', updateTransferField);
 {% endblock %}
 
 {% block content %}
-<div class="info-box">
-    <div class="column-center">
-        <div class="widget">
-            <h2>Faire une transaction</h2>
-        </div>
 
-        <div class="widget">
-            <form method="post" action="/transaction">
-                <div class="row-center">
-                    <label>Type de transaction : </label>
-                    <select name="type" id="type" required>
-                        <option value="deposit">Dépôt</option>
-                        <option value="transfer">Verser à</option>
-                    </select>
-                </div>
-                <div class="row-center" id="extra-field-container"></div>
-                    
-                <input type="number" name="amount" placeholder="Montant (€)" step="0.01" min="0" required>
+<div class="column-center">
+    <div class="widget">
+        <h2>Faire une transaction</h2>
+    </div>
+
+    <div class="widget">
+        <form method="post" action="/transaction" class="column-center">
+            <div class="form-liner">
+                <label>Type de transaction</label>
+                <select name="type" id="type" required>
+                    <option value="deposit">Dépôt</option>
+                    <option value="transfer">Verser à</option>
+                </select>
+            </div>
+            <div class="form-liner" id="extra-field-container"></div>
             
-                <button type="submit" class="btn">Valider</button>
-            </form>
-        </div>
+            <div class="form-liner">
+                <label>Montant</label>
+                <input type="number" name="amount" placeholder="Ex: 100" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-liner">
+                <label for="reason">Objet</label>
+                <textarea id="reason" name="reason" rows="2" maxlength="80"></textarea>
+            </div>
+        
+            <button type="submit" class="btn" {% if frozen %} disabled {% endif %}>Valider</button>
+            <a href="/home" class="danger-btn">Annuler</a>
+        </form>
     </div>
 </div>
 {% endblock %}

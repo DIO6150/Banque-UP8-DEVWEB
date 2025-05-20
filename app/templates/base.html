@@ -27,8 +27,10 @@
         
         <div class="layout-container">
             {% block precontent %}{% endblock %}
-            <main>    
-                {% block content %}{% endblock %}
+            <main>
+                <div class="info-box">
+                    {% block content %}{% endblock %}
+                </div>
             </main>
             {% block postcontent %}{% endblock %}
         </div>

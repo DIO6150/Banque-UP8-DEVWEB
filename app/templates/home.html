@@ -20,20 +20,18 @@
 
 {% block content %}
 
-<div class="info-box">
-    <div class="row-center">
-        <div class="widget">
-            <h1>Bienvenue {{ username }}</h1>
-        </div>
-    
-        <div class="widget">
-            <h3>Statistiques</h2>    
-            <ul class="stats">
-                <li>Solde : {{ balance }} €</li>
-                <li>État du compte : {{ 'Gelé' if frozen else 'Actif' }}</li>
-                <li>Numéro de compte : {{ '%010d' % user_id }}</li>
-            </ul>
-        </div>
+<div class="row-center">
+    <div class="widget">
+        <h1>Bienvenue {{ username }}</h1>
+    </div>
+
+    <div class="widget">
+        <h3>Statistiques</h2>    
+        <ul class="stats" class="column-center">
+            <li>Solde : {{ balance }} €</li>
+            <li>État du compte : {{ 'Gelé' if frozen else 'Actif' }}</li>
+            <li>Numéro de compte : {{ '%010d' % user_id }}</li>
+        </ul>
     </div>
 </div>
 

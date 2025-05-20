@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     type TEXT CHECK(type IN ('deposit', 'transfer')) NOT NULL,
     amount REAL NOT NULL,
     date TEXT NOT NULL,
+    reason TEXT DEFAULT '',
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 

@@ -155,12 +155,14 @@ footer {
     background-color: #11e643;
 }
 
-.widget .btn, .danger-btn, .success-btn {
-    width: 100%;
-}
-
 .btn:hover {
     background-color: #0b84d4;
+}
+
+.btn:disabled {
+    background-color: rgb(206, 206, 206);
+    color:rgb(134, 134, 134);
+    cursor: default;
 }
 
 .danger-btn:hover {
@@ -181,7 +183,7 @@ input::file-selector-button {
     display: flex;
     justify-content: center;
     align-items: start;
-
+    
 }
 
 .widget {
@@ -193,24 +195,16 @@ input::file-selector-button {
     margin: 0.5em;
 }
 
-.info-box form.widget {
+.info-box > form.widget {
     text-align: center;
 }
 
-.info-box .widget input[type="email"],
-.info-box .widget input[type="password"],
-.info-box .widget input[type="text"] {
+.info-box > .widget > input[type="email"],
+.info-box > .widget > input[type="password"],
+.info-box > .widget > input[type="text"] {
     box-sizing: border-box;
     width: 100%;
-    border: 1px solid #f30404;
-    border-radius: 4px;
     display: inline-block;
-}
-
-.info-box .widget a {
-    box-sizing: border-box;
-    width: 100%;
-    display: block;
 }
 
 /* LINKS */
@@ -260,30 +254,21 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-}
-
-table.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
     font-size: 0.95rem;
 }
 
-.styled-table th, .styled-table td {
-    padding: 0.75rem;
+th, td {
+    border: 1px solid #ccc;
     text-align: center;
+    padding: 0.75rem;
     border-bottom: 1px solid #ddd;
 }
 
-.styled-table th {
+th {
     background-color: #ecf0f1;
     color: #2c3e50;
 }
+
 
 /* STATS LIST */
 
@@ -301,7 +286,6 @@ table.styled-table {
 .stats li {
     position: relative;
     padding-left: 1.8em;
-    margin-bottom: 0.8rem;
     line-height: 1.4;
     font-weight: 500;
     background: #eaf4fc;
@@ -315,9 +299,8 @@ table.styled-table {
 
 /* COMMON */
 
-form input, form select {
+form > input, form > select {
     width: 100%;
-    padding: 0.6rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
@@ -334,9 +317,12 @@ textarea {
 /* WIDGET ROWS */
 
 .row, .row-center {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
-    box-sizing: border-box;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+    align-content: stretch;
 }
 
 .row {
@@ -347,24 +333,31 @@ textarea {
     align-items: center;
 }
 
-.row label, .row select, .row-center label, .row-center select {
+.row > label, .row > select, .row-center > label, .row-center > select {
     display: inline-block;
 }
 
-.row label, .row-center label, .row h2, .row-center h2 {
+.row > label, .row-center > label, .row > h2, .row-center > h2 {
     white-space: nowrap;
-    margin: 10px;
 }
 
 /* WIDGET COLUMN */
 
-.column, .column-center {
-    display: flex;
+.column, .column-center, .widget {
+    display: inline-flex;
     flex-direction: column;
-    box-sizing: border-box;
+    flex-wrap: nowrap;
+    justify-content: start;
+    align-content: stretch;
+    /*border: 5px solid red;*/
 }
 
-.column {
+.column > *, .column-center > *, .widget > * {
+    /*border: 5px solid rgb(0, 255, 64);*/
+    align-self: stretch;
+}
+
+.column, .widget {
     align-items: start;
 }
 
@@ -372,25 +365,150 @@ textarea {
     align-items: center;
 }
 
-.column, .column-center .widget {
+.column, .column-center > .widget {
     margin-bottom: 10px;
 }
 
 
-/* GRID LABEL-INPUT ALIGNEMENT */
+/* input-label */
 
-.form-alignement-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+.single-liner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: normal;
+    align-content: normal;
 }
 
-.form-alignement-label {
-    grid-area: 1 / 1 / 2 / 2;
+.single-liner > * {
+    display: block;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: auto;
+    order: 0;
+
+    margin: 2.5px;
 }
 
-.form-alignement-input {
-    grid-area: 1 / 2 / 2 / 3;
+.single-liner > select, .single-liner > input {
+    padding:0.6em;
+}
+
+.form-liner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: normal;
+    align-content: normal;
+}
+
+.form-liner > * {
+    display: block;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: center;
+    order: 0;
+}
+
+.form-liner > *:first-child {
+    margin-top: 2.5px;
+    margin-right: 2.5px;
+    margin-bottom: 2.5px;
+    white-space: nowrap;
+}
+
+.form-liner > *:last-child {
+    margin-top: 2.5px;
+    margin-left: 2.5px;
+    margin-bottom: 2.5px;
+}
+
+.form-liner > select, .form-liner > input {
+    padding: 0.6em;
+}
+
+/* inputs style */
+
+select, input, textarea {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.widget .btn, .widget .danger-btn, .widget .success-btn {
+    width: 100%;
+}
+
+input[type=text]:read-only {
+    background-color: rgb(206, 206, 206);
+    color:gray;
+}
+
+
+/* FLIPSWITCH */
+
+.flipswitch {
+    position: relative;
+    width: 63px;
+}
+.flipswitch input[type=checkbox] {
+    display: none;
+}
+.flipswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #999999;
+    border-radius: 18px;
+}
+.flipswitch-inner {
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+}
+.flipswitch-inner:before, .flipswitch-inner:after {
+    float: left;
+    width: 50%;
+    height: 24px;
+    padding: 0;
+    line-height: 24px;
+    font-size: 16px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+.flipswitch-inner:before {
+    content: "";
+    padding-left: 9px;
+    background-color: #007bff;
+    color: #FFFFFF;
+}
+.flipswitch-inner:after {
+    content: "";
+    padding-right: 9px;
+    background-color: #EBEBEB;
+    color: #888888;
+    text-align: right;
+}
+.flipswitch-switch {
+    width: 29px;
+    margin: -0.5px;
+    background: #FFFFFF;
+    border: 1px solid #999999;
+    border-radius: 18px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 36px;
+    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+}
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-inner {
+    margin-left: 0;
+}
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
+    right: 0;
 }

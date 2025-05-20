@@ -51,11 +51,18 @@ def admin_edit_user(user_id):
         return redirect(url_for('admin.admin_dashboard'))
 
     user = db.execute('''
-        SELECT users.email, users.role, accounts.balance, accounts.frozen
+        SELECT firstname, name, email, role, balance, frozen
         FROM users
         JOIN accounts ON users.id = accounts.user_id
         WHERE users.id = ?
     ''', (user_id,)).fetchone()
+
+    history = db.execute('''
+        SELECT type, amount, date, reason
+        FROM transactions
+        WHERE user_id = ?
+        ORDER BY date DESC
+    ''', (session['user_id'],)).fetchall()
 
     loan_requests = db.execute("""
         SELECT loan_requests.*
@@ -65,7 +72,7 @@ def admin_edit_user(user_id):
     """).fetchall()
 
 
-    return render_template('admin_user.html', user=user, loan_requests=loan_requests)
+    return render_template('admin_user.html', user=user, loan_requests=loan_requests, transactions=history)
 
 
 @admin_bp.route('/admin/toggle/<int:user_id>', methods=['POST'])

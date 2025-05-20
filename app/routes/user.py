@@ -15,7 +15,7 @@ user_bp = Blueprint("user", __name__)
 def history():
     db = get_db()
     rows = db.execute('''
-        SELECT type, amount, date
+        SELECT type, amount, date, reason
         FROM transactions
         WHERE user_id = ?
         ORDER BY date DESC
@@ -35,7 +35,9 @@ def transaction():
         amount = float(request.form['amount'])
         now = datetime.now().isoformat(timespec='seconds')
         transfer_to = None
-        
+        reason = request.form['reason']
+
+        if (len(reason) > 80): return ("raison trop longue", 400)
 
         # Vérifie si compte gelé
         frozen = db.execute('SELECT frozen FROM accounts WHERE user_id = ?', (user_id,)).fetchone()['frozen']
@@ -44,7 +46,7 @@ def transaction():
         # Logique par type
         if type_ == 'deposit':
             db.execute('UPDATE accounts SET balance = balance + ? WHERE user_id = ?', (amount, user_id))
-            db.execute('INSERT INTO transactions (user_id, type, amount, date) VALUES (?, ?, ?, ?)', (user_id, type_, +amount, now))
+            db.execute('INSERT INTO transactions (user_id, type, amount, date, reason) VALUES (?, ?, ?, ?, ?)', (user_id, type_, +amount, now, reason))
 
         elif type_ == 'transfer':
             if (request.form ['user-id-trans']):
@@ -58,8 +60,8 @@ def transaction():
                 if (cursor.fetchone ()):
                     db.execute('UPDATE accounts SET balance = balance - ? WHERE user_id = ?', (amount, user_id))
                     db.execute('UPDATE accounts SET balance = balance + ? WHERE user_id = ?', (amount, transfer_to))
-                    db.execute('INSERT INTO transactions (user_id, type, amount, date) VALUES (?, ?, ?, ?)', (transfer_to, type_, +amount, now))
-                    db.execute('INSERT INTO transactions (user_id, type, amount, date) VALUES (?, ?, ?, ?)', (user_id, type_, -amount, now))
+                    db.execute('INSERT INTO transactions (user_id, type, amount, date, reason) VALUES (?, ?, ?, ?, ?)', (transfer_to, type_, +amount, now, reason))
+                    db.execute('INSERT INTO transactions (user_id, type, amount, date, reason) VALUES (?, ?, ?, ?, ?)', (user_id, type_, -amount, now, reason))
 
                 else:
                     return ("ID bénéficiaire inconnu", 400)
@@ -88,6 +90,8 @@ def loan_request():
         amount = request.form["amount"]
         duration = request.form["duration"]
         reason = request.form["reason"]
+
+        if (len(reason) > 80): return ("raison trop longue", 400)
 
         document = request.files.get("justification")
         file_path = None
